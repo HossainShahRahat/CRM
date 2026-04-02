@@ -1,19 +1,16 @@
 import { Topbar } from "../../components/layout/topbar";
+import { TaskDashboard } from "../../components/tasks/task-dashboard";
 
 const TasksPage = () => {
   return (
     <>
       <Topbar
         title="Tasks"
-        subtitle="Ready for activity queues, reminders, and follow-up execution flows."
+        subtitle="Manage linked calls, meetings, follow-ups, and a basic task calendar."
       />
-      <section className="page-card">
-        <h2>Tasks module</h2>
-        <p>Task tables, calendars, and automation hooks can be added here later.</p>
-      </section>
+      <TaskDashboard />
     </>
   );
 };
 
 export default TasksPage;
-

@@ -13,9 +13,15 @@ const taskSchema = new Schema(
     relatedTo: {
       entityType: {
         type: String,
-        enum: ["contact", "lead", "deal", "activity", "note"],
+        enum: ["contact", "lead", "deal"],
       },
       entityId: objectId(),
+    },
+    taskType: {
+      type: String,
+      enum: ["call", "meeting", "follow_up"],
+      required: true,
+      default: "follow_up",
     },
     title: {
       type: String,
@@ -54,7 +60,7 @@ const taskSchema = new Schema(
 taskSchema.index({ workspaceId: 1, assignedUserId: 1, status: 1, dueDate: 1 });
 taskSchema.index({ workspaceId: 1, "relatedTo.entityType": 1, "relatedTo.entityId": 1 });
 taskSchema.index({ workspaceId: 1, priority: 1, dueDate: 1 });
+taskSchema.index({ workspaceId: 1, taskType: 1, status: 1, dueDate: 1 });
 
 export type TaskDocument = InferSchemaType<typeof taskSchema>;
 export const TaskModel = model("Task", taskSchema, "tasks");
-
