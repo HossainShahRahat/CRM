@@ -1,4 +1,4 @@
-import { appConfig } from "./app-config";
+import { apiRequest } from "./api-client";
 
 export type WorkspaceSettings = {
   id: string;
@@ -28,48 +28,12 @@ export type WorkspaceSettings = {
   }>;
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("crm_access_token");
-};
-
-const createHeaders = () => {
-  const token = getAccessToken();
-
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
-
-export const fetchSettings = async () => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/settings`, {
-    headers: createHeaders(),
-    cache: "no-store",
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to fetch settings");
-  }
-
-  return data as WorkspaceSettings;
-};
+export const fetchSettings = async () => apiRequest<WorkspaceSettings>("/settings");
 
 export const updateSettings = async (
   payload: Partial<Pick<WorkspaceSettings, "customFields" | "pipelines" | "rolePermissions">>,
-) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/settings`, {
+) =>
+  apiRequest<WorkspaceSettings>("/settings", {
     method: "PUT",
-    headers: createHeaders(),
     body: JSON.stringify(payload),
   });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to update settings");
-  }
-
-  return data as WorkspaceSettings;
-};
-

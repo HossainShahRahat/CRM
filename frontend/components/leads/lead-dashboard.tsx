@@ -15,6 +15,7 @@ import {
   type LeadRecord,
   type UserOption,
 } from "../../lib/leads";
+import { isValidEmail, isValidPhone, requireFields } from "../../lib/validation";
 
 const statuses: Array<LeadRecord["status"]> = ["new", "contacted", "qualified", "lost"];
 
@@ -73,6 +74,16 @@ export const LeadDashboard = () => {
   }, []);
 
   useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void (async () => {
+        await Promise.resolve(loadDashboard());
+      })();
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [search]);
+
+  useEffect(() => {
     if (!selectedLeadId) {
       setLeadDetails(null);
       return;
@@ -103,6 +114,27 @@ export const LeadDashboard = () => {
 
   const handleCreateLead = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const validationError = requireFields([
+      { valid: newLead.firstName.trim().length > 0, message: "Lead first name is required." },
+      {
+        valid: newLead.assignedUserId.trim().length > 0,
+        message: "Please assign the lead to a user.",
+      },
+      {
+        valid: !newLead.email || isValidEmail(newLead.email),
+        message: "Email must be valid when provided.",
+      },
+      {
+        valid: !newLead.phone || isValidPhone(newLead.phone),
+        message: "Phone must be valid when provided.",
+      },
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -169,6 +201,10 @@ export const LeadDashboard = () => {
   const submitNote = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedLeadId) return;
+    if (!noteBody.trim()) {
+      setError("Note body cannot be empty.");
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -184,6 +220,19 @@ export const LeadDashboard = () => {
   const submitFollowUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedLeadId) return;
+    const validationError = requireFields([
+      { valid: followUp.title.trim().length > 0, message: "Follow-up title is required." },
+      { valid: followUp.dueDate.trim().length > 0, message: "Follow-up due date is required." },
+      {
+        valid: followUp.assignedUserId.trim().length > 0,
+        message: "Follow-up assignee is required.",
+      },
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -290,7 +339,7 @@ export const LeadDashboard = () => {
             <div>
               <h2>{leadDetails.lead.name}</h2>
               <p>
-                {leadDetails.lead.companyName || "No company"} · {leadDetails.lead.email || "No email"}
+                {leadDetails.lead.companyName || "No company"} - {leadDetails.lead.email || "No email"}
               </p>
             </div>
             <div className="lead-detail__actions">
@@ -403,7 +452,7 @@ export const LeadDashboard = () => {
                 {leadDetails.followUps.map((followItem) => (
                   <article key={followItem.id} className="timeline-item">
                     <strong>{followItem.title}</strong>
-                    <p>{followItem.priority} · {followItem.status}</p>
+                    <p>{followItem.priority} - {followItem.status}</p>
                   </article>
                 ))}
               </div>
@@ -414,4 +463,3 @@ export const LeadDashboard = () => {
     </div>
   );
 };
-

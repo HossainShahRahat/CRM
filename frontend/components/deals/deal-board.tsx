@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 
 import { createDeal, deleteDeal, fetchDeals, updateDealStage, type DealRecord, type DealStage } from "../../lib/deals";
 import { fetchUserOptions, type UserOption } from "../../lib/leads";
+import { requireFields } from "../../lib/validation";
 
 const stages: DealStage[] = ["qualification", "proposal", "negotiation", "won", "lost"];
 
@@ -214,6 +215,21 @@ export const DealBoard = () => {
   const handleCreateDeal = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const validationError = requireFields([
+      { valid: form.name.trim().length > 0, message: "Deal name is required." },
+      { valid: Number(form.amount) > 0, message: "Deal value must be greater than zero." },
+      {
+        valid: form.expectedCloseDate.trim().length > 0,
+        message: "Expected close date is required.",
+      },
+      { valid: form.ownerId.trim().length > 0, message: "Please select a deal owner." },
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     startTransition(async () => {
       try {
         await createDeal({
@@ -338,4 +354,3 @@ export const DealBoard = () => {
     </div>
   );
 };
-

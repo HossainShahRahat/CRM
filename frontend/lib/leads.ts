@@ -1,4 +1,4 @@
-import { appConfig } from "./app-config";
+import { apiRequest, buildQueryString } from "./api-client";
 
 export type UserOption = {
   id: string;
@@ -42,76 +42,38 @@ export type LeadDetails = {
   }>;
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("crm_access_token");
-};
-
-const createHeaders = () => {
-  const token = getAccessToken();
-
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
-
-const request = async <T>(path: string, init?: RequestInit) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
-    ...init,
-    headers: {
-      ...createHeaders(),
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Request failed");
-  }
-
-  return data as T;
-};
-
 export const fetchLeads = (params: {
   page: number;
   limit: number;
   search?: string;
   status?: string;
 }) => {
-  const searchParams = new URLSearchParams({
-    page: String(params.page),
-    limit: String(params.limit),
-  });
+  const queryString = buildQueryString(params);
 
-  if (params.search) searchParams.set("search", params.search);
-  if (params.status) searchParams.set("status", params.status);
-
-  return request<{ data: LeadRecord[]; meta: { page: number; totalPages: number; total: number } }>(
-    `/leads?${searchParams.toString()}`,
+  return apiRequest<{ data: LeadRecord[]; meta: { page: number; totalPages: number; total: number } }>(
+    `/leads?${queryString}`,
   );
 };
 
-export const fetchLeadDetails = (leadId: string) => request<LeadDetails>(`/leads/${leadId}`);
-export const fetchUserOptions = () => request<UserOption[]>("/users/options");
+export const fetchLeadDetails = (leadId: string) => apiRequest<LeadDetails>(`/leads/${leadId}`);
+export const fetchUserOptions = () => apiRequest<UserOption[]>("/users/options");
 export const createLead = (payload: Record<string, unknown>) =>
-  request<LeadRecord>("/leads", {
+  apiRequest<LeadRecord>("/leads", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 export const updateLeadStatus = (leadId: string, status: string) =>
-  request<LeadRecord>(`/leads/${leadId}/status`, {
+  apiRequest<LeadRecord>(`/leads/${leadId}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
 export const assignLead = (leadId: string, assignedUserId: string) =>
-  request<LeadRecord>(`/leads/${leadId}/assign`, {
+  apiRequest<LeadRecord>(`/leads/${leadId}/assign`, {
     method: "PATCH",
     body: JSON.stringify({ assignedUserId }),
   });
 export const addLeadNote = (leadId: string, body: string) =>
-  request(`/leads/${leadId}/notes`, {
+  apiRequest(`/leads/${leadId}/notes`, {
     method: "POST",
     body: JSON.stringify({ body }),
   });
@@ -119,8 +81,7 @@ export const addLeadFollowUp = (
   leadId: string,
   payload: { title: string; description?: string; dueDate: string; priority: string; assignedUserId: string },
 ) =>
-  request(`/leads/${leadId}/follow-ups`, {
+  apiRequest(`/leads/${leadId}/follow-ups`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
-

@@ -1,4 +1,4 @@
-import { appConfig } from "./app-config";
+import { apiRequest, buildQueryString } from "./api-client";
 
 export type ContactRecord = {
   id: string;
@@ -44,23 +44,6 @@ export type ContactFormPayload = {
   tags: string[];
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  return window.localStorage.getItem("crm_access_token");
-};
-
-const createHeaders = () => {
-  const token = getAccessToken();
-
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
-
 export const fetchContacts = async (params: {
   page: number;
   limit: number;
@@ -68,78 +51,32 @@ export const fetchContacts = async (params: {
   tag?: string;
   company?: string;
 }) => {
-  const searchParams = new URLSearchParams({
+  const queryString = buildQueryString({
     page: String(params.page),
     limit: String(params.limit),
+    search: params.search,
+    tag: params.tag,
+    company: params.company,
   });
-
-  if (params.search) searchParams.set("search", params.search);
-  if (params.tag) searchParams.set("tag", params.tag);
-  if (params.company) searchParams.set("company", params.company);
-
-  const response = await fetch(
-    `${appConfig.apiBaseUrl}/contacts?${searchParams.toString()}`,
-    { headers: createHeaders(), cache: "no-store" },
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch contacts");
-  }
-
-  return (await response.json()) as ContactsResponse;
+  return apiRequest<ContactsResponse>(`/contacts?${queryString}`);
 };
 
-export const fetchContact = async (contactId: string) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/contacts/${contactId}`, {
-    headers: createHeaders(),
-    cache: "no-store",
-  });
+export const fetchContact = async (contactId: string) =>
+  apiRequest<ContactRecord>(`/contacts/${contactId}`);
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch contact");
-  }
-
-  return (await response.json()) as ContactRecord;
-};
-
-export const createContact = async (payload: ContactFormPayload) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/contacts`, {
+export const createContact = async (payload: ContactFormPayload) =>
+  apiRequest<ContactRecord>("/contacts", {
     method: "POST",
-    headers: createHeaders(),
     body: JSON.stringify(payload),
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to create contact");
-  }
-
-  return data as ContactRecord;
-};
-
-export const updateContact = async (contactId: string, payload: ContactFormPayload) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/contacts/${contactId}`, {
+export const updateContact = async (contactId: string, payload: ContactFormPayload) =>
+  apiRequest<ContactRecord>(`/contacts/${contactId}`, {
     method: "PATCH",
-    headers: createHeaders(),
     body: JSON.stringify(payload),
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to update contact");
-  }
-
-  return data as ContactRecord;
-};
-
-export const deleteContact = async (contactId: string) => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/contacts/${contactId}`, {
+export const deleteContact = async (contactId: string) =>
+  apiRequest<{ message: string; deletedContactId: string }>(`/contacts/${contactId}`, {
     method: "DELETE",
-    headers: createHeaders(),
   });
-
-  if (!response.ok) {
-    const data = await response.json();
-    throw new Error(data.message ?? "Failed to delete contact");
-  }
-};

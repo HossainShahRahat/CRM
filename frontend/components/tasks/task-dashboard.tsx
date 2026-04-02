@@ -7,6 +7,7 @@ import { fetchDeals, type DealRecord } from "../../lib/deals";
 import { fetchLeads, type LeadRecord } from "../../lib/leads";
 import { fetchUserOptions, type UserOption } from "../../lib/leads";
 import { createTask, fetchActivities, fetchTasks, updateTaskStatus, type ActivityRecord, type TaskRecord } from "../../lib/tasks";
+import { requireFields } from "../../lib/validation";
 
 type RelatedOption = {
   id: string;
@@ -102,6 +103,21 @@ export const TaskDashboard = () => {
 
   const handleCreateTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const validationError = requireFields([
+      { valid: form.title.trim().length > 0, message: "Task title is required." },
+      {
+        valid: form.assignedUserId.trim().length > 0,
+        message: "Please select an assigned user.",
+      },
+      { valid: form.entityId.trim().length > 0, message: "Please select a linked CRM record." },
+      { valid: form.dueDate.trim().length > 0, message: "Due date is required." },
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -210,7 +226,7 @@ export const TaskDashboard = () => {
                   <div>
                     <strong>{task.title}</strong>
                     <p>
-                      {task.taskType.replace("_", " ")} · {task.priority} · due{" "}
+                      {task.taskType.replace("_", " ")} - {task.priority} - due{" "}
                       {task.dueDate ? new Date(task.dueDate).toLocaleString() : "N/A"}
                     </p>
                     <p>
@@ -245,7 +261,7 @@ export const TaskDashboard = () => {
                   {items.map((task) => (
                     <article key={task.id} className="timeline-item">
                       <strong>{task.title}</strong>
-                      <p>{task.taskType.replace("_", " ")} · {task.status}</p>
+                      <p>{task.taskType.replace("_", " ")} - {task.status}</p>
                     </article>
                   ))}
                 </div>
@@ -269,4 +285,3 @@ export const TaskDashboard = () => {
     </div>
   );
 };
-

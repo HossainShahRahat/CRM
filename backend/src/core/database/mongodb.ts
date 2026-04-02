@@ -13,12 +13,19 @@ export const connectToDatabase = async () => {
     return database;
   }
 
-  client = new MongoClient(env.MONGODB_URI);
+  client = new MongoClient(env.MONGODB_URI, {
+    maxPoolSize: env.MONGODB_MAX_POOL_SIZE,
+    minPoolSize: env.MONGODB_MIN_POOL_SIZE,
+    retryWrites: true,
+    serverSelectionTimeoutMS: 5000,
+  });
   await client.connect();
   database = client.db(env.MONGODB_DB_NAME);
   if (!mongooseConnected) {
     await mongoose.connect(env.MONGODB_URI, {
       dbName: env.MONGODB_DB_NAME,
+      maxPoolSize: env.MONGODB_MAX_POOL_SIZE,
+      minPoolSize: env.MONGODB_MIN_POOL_SIZE,
     });
     mongooseConnected = true;
   }

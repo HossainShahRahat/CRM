@@ -1,4 +1,4 @@
-import { appConfig } from "./app-config";
+import { apiRequest } from "./api-client";
 
 export type NotificationRecord = {
   id: string;
@@ -14,48 +14,12 @@ export type NotificationRecord = {
   createdAt?: string;
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("crm_access_token");
-};
-
-const createHeaders = () => {
-  const token = getAccessToken();
-
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
-
 export const fetchNotifications = async () => {
-  const response = await fetch(`${appConfig.apiBaseUrl}/notifications`, {
-    headers: createHeaders(),
-    cache: "no-store",
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to fetch notifications");
-  }
-
-  return data as { data: NotificationRecord[]; unreadCount: number };
+  return apiRequest<{ data: NotificationRecord[]; unreadCount: number }>("/notifications");
 };
 
 export const markNotificationAsRead = async (notificationId: string) => {
-  const response = await fetch(
-    `${appConfig.apiBaseUrl}/notifications/${notificationId}/read`,
-    {
-      method: "PATCH",
-      headers: createHeaders(),
-    },
-  );
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to mark notification as read");
-  }
-
-  return data as NotificationRecord;
+  return apiRequest<NotificationRecord>(`/notifications/${notificationId}/read`, {
+    method: "PATCH",
+  });
 };
-

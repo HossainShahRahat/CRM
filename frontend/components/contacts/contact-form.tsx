@@ -10,6 +10,7 @@ import {
   updateContact,
   type ContactFormPayload,
 } from "../../lib/contacts";
+import { isValidEmail, isValidPhone, requireFields } from "../../lib/validation";
 
 type ContactFormProps = {
   mode: "create" | "edit";
@@ -78,26 +79,38 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const validationError = requireFields([
+      { valid: form.firstName.trim().length > 0, message: "First name is required." },
+      { valid: isValidEmail(form.email), message: "A valid email address is required." },
+      { valid: isValidPhone(form.phone), message: "A valid phone number is required." },
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      setSuccessMessage(null);
+      return;
+    }
+
     const payload: ContactFormPayload = {
-      firstName: form.firstName,
-      lastName: form.lastName,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
       emails: [
         {
-          value: form.email,
+          value: form.email.trim(),
           label: "work",
           isPrimary: true,
         },
       ],
       phones: [
         {
-          value: form.phone,
+          value: form.phone.trim(),
           label: "mobile",
           isPrimary: true,
         },
       ],
       company: {
-        name: form.companyName,
-        title: form.companyTitle,
+        name: form.companyName.trim(),
+        title: form.companyTitle.trim(),
       },
       tags: form.tags
         .split(",")

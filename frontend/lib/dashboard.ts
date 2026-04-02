@@ -1,4 +1,4 @@
-import { appConfig } from "./app-config";
+import { apiRequest } from "./api-client";
 
 export type DashboardOverview = {
   metrics: {
@@ -25,26 +25,6 @@ export type DashboardOverview = {
   };
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("crm_access_token");
-};
-
 export const fetchDashboardOverview = async () => {
-  const token = getAccessToken();
-  const response = await fetch(`${appConfig.apiBaseUrl}/dashboard/overview`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    cache: "no-store",
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message ?? "Failed to fetch dashboard data");
-  }
-
-  return data as DashboardOverview;
+  return apiRequest<DashboardOverview>("/dashboard/overview");
 };
-
