@@ -18,7 +18,7 @@ const leadSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["new", "contacted", "qualified", "disqualified", "converted"],
+      enum: ["new", "contacted", "qualified", "lost"],
       default: "new",
     },
     score: {
@@ -66,6 +66,11 @@ const leadSchema = new Schema(
       type: [String],
       default: [],
     },
+    scoreBand: {
+      type: String,
+      enum: ["cold", "warm", "hot"],
+      default: "cold",
+    },
     customFields: {
       type: Map,
       of: Schema.Types.Mixed,
@@ -90,4 +95,3 @@ leadSchema.index({ workspaceId: 1, tags: 1 });
 
 export type LeadDocument = InferSchemaType<typeof leadSchema>;
 export const LeadModel = model("Lead", leadSchema, "leads");
-

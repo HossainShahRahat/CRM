@@ -1,19 +1,16 @@
 import { Topbar } from "../../components/layout/topbar";
+import { LeadDashboard } from "../../components/leads/lead-dashboard";
 
 const LeadsPage = () => {
   return (
     <>
       <Topbar
         title="Leads"
-        subtitle="Prepared for lead intake pipelines, qualification stages, and ownership views."
+        subtitle="Create, assign, qualify, and follow up on leads from one dashboard."
       />
-      <section className="page-card">
-        <h2>Leads module</h2>
-        <p>Kanban boards, forms, and conversion metrics can be layered in later.</p>
-      </section>
+      <LeadDashboard />
     </>
   );
 };
 
 export default LeadsPage;
-

@@ -20,3 +20,11 @@ export const getAdminUsersSummary = (
 ) => {
   response.status(200).json(usersService.getAdminSummary());
 };
+
+export const getUserOptions = async (
+  request: AuthenticatedRequest,
+  response: Response,
+) => {
+  const users = await usersService.getUserOptions(request.auth!.workspaceId);
+  response.status(200).json(users);
+};
