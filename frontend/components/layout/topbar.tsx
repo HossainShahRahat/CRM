@@ -1,3 +1,5 @@
+import { NotificationDropdown } from "./notification-dropdown";
+
 type TopbarProps = {
   title: string;
   subtitle: string;
@@ -16,7 +18,7 @@ export const Topbar = ({ title, subtitle }: TopbarProps) => {
         placeholder="Search customers, deals, or tasks"
         aria-label="Search"
       />
+      <NotificationDropdown />
     </header>
   );
 };
-

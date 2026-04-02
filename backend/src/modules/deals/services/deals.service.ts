@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 import { AppError } from "../../../core/errors/app-error.js";
+import { notificationsService } from "../../notifications/services/notifications.service.js";
 import { UserModel } from "../../users/models/user.model.js";
 import { DealModel } from "../models/deal.model.js";
 
@@ -164,6 +165,23 @@ export const dealsService = {
     deal.updatedBy = new Types.ObjectId(userId);
     await deal.save();
 
+    await notificationsService.createNotification({
+      workspaceId,
+      recipientUserId: deal.ownerId.toString(),
+      type: "deal_updated",
+      title: "Deal updated",
+      message: `${deal.name} was updated in pipeline ${deal.pipeline}.`,
+      relatedEntity: {
+        entityType: "deal",
+        entityId: deal._id.toString(),
+      },
+      metadata: {
+        stage: deal.stage,
+        amount: deal.amount,
+      },
+      createdBy: userId,
+    });
+
     return formatDeal(deal);
   },
 
@@ -191,6 +209,23 @@ export const dealsService = {
     deal.updatedBy = new Types.ObjectId(userId);
 
     await deal.save();
+
+    await notificationsService.createNotification({
+      workspaceId,
+      recipientUserId: deal.ownerId.toString(),
+      type: "deal_updated",
+      title: "Deal stage changed",
+      message: `${deal.name} moved to ${stage}.`,
+      relatedEntity: {
+        entityType: "deal",
+        entityId: deal._id.toString(),
+      },
+      metadata: {
+        stage,
+        pipelinePosition: deal.pipelinePosition,
+      },
+      createdBy: userId,
+    });
 
     return formatDeal(deal);
   },

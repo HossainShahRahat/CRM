@@ -5,6 +5,7 @@ import { ActivityModel } from "../../activities/models/activity.model.js";
 import { ContactModel } from "../../contacts/models/contact.model.js";
 import { DealModel } from "../../deals/models/deal.model.js";
 import { LeadModel } from "../../leads/models/lead.model.js";
+import { notificationsService } from "../../notifications/services/notifications.service.js";
 import { UserModel } from "../../users/models/user.model.js";
 import { TaskModel } from "../models/task.model.js";
 
@@ -186,6 +187,23 @@ export const tasksService = {
       message: `Created ${task.taskType.replace("_", " ")} task: ${task.title}`,
     });
 
+    await notificationsService.createNotification({
+      workspaceId,
+      recipientUserId: input.assignedUserId,
+      type: "task_due",
+      title: "Task due scheduled",
+      message: `${task.title} is due on ${task.dueDate?.toISOString() ?? "the scheduled date"}`,
+      relatedEntity: {
+        entityType: "task",
+        entityId: task._id.toString(),
+      },
+      metadata: {
+        dueDate: task.dueDate,
+        reminderAt: task.reminderAt,
+      },
+      createdBy: userId,
+    });
+
     return formatTask(task);
   },
 
@@ -225,6 +243,23 @@ export const tasksService = {
       relatedTo: relation,
       activityType: "updated",
       message: `Updated task: ${task.title}`,
+    });
+
+    await notificationsService.createNotification({
+      workspaceId,
+      recipientUserId: task.assignedUserId.toString(),
+      type: "task_due",
+      title: "Task updated",
+      message: `${task.title} now has status ${task.status} and is due on ${task.dueDate?.toISOString() ?? "the scheduled date"}`,
+      relatedEntity: {
+        entityType: "task",
+        entityId: task._id.toString(),
+      },
+      metadata: {
+        dueDate: task.dueDate,
+        reminderAt: task.reminderAt,
+      },
+      createdBy: userId,
     });
 
     return formatTask(task);

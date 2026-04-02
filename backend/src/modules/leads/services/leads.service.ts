@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 
 import { AppError } from "../../../core/errors/app-error.js";
 import { NoteModel } from "../../notes/models/note.model.js";
+import { notificationsService } from "../../notifications/services/notifications.service.js";
 import { TaskModel } from "../../tasks/models/task.model.js";
 import { UserModel } from "../../users/models/user.model.js";
 import { LeadModel } from "../models/lead.model.js";
@@ -148,6 +149,21 @@ export const leadsService = {
       updatedBy: new Types.ObjectId(userId),
     });
 
+    if (input.assignedUserId !== userId) {
+      await notificationsService.createNotification({
+        workspaceId,
+        recipientUserId: input.assignedUserId,
+        type: "lead_assigned",
+        title: "New lead assigned",
+        message: `You were assigned the lead ${lead.firstName} ${lead.lastName ?? ""}`.trim(),
+        relatedEntity: {
+          entityType: "lead",
+          entityId: lead._id.toString(),
+        },
+        createdBy: userId,
+      });
+    }
+
     return formatLead(lead);
   },
 
@@ -202,7 +218,7 @@ export const leadsService = {
     leadId: string,
     assignedUserId: string,
   ) => {
-    await ensureAssignableUser(workspaceId, assignedUserId);
+    const assignee = await ensureAssignableUser(workspaceId, assignedUserId);
 
     const lead = await LeadModel.findOne({
       _id: new Types.ObjectId(leadId),
@@ -216,6 +232,21 @@ export const leadsService = {
     lead.assignedUserId = new Types.ObjectId(assignedUserId);
     lead.updatedBy = new Types.ObjectId(userId);
     await lead.save();
+
+    if (assignedUserId !== userId) {
+      await notificationsService.createNotification({
+        workspaceId,
+        recipientUserId: assignedUserId,
+        type: "lead_assigned",
+        title: "New lead assigned",
+        message: `Lead ${lead.firstName} ${lead.lastName ?? ""} is now assigned to ${assignee.displayName}.`.trim(),
+        relatedEntity: {
+          entityType: "lead",
+          entityId: lead._id.toString(),
+        },
+        createdBy: userId,
+      });
+    }
 
     return formatLead(lead);
   },
