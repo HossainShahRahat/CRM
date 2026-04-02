@@ -1,19 +1,16 @@
 import { Topbar } from "../../components/layout/topbar";
+import { ContactList } from "../../components/contacts/contact-list";
 
 const ContactsPage = () => {
   return (
     <>
       <Topbar
         title="Contacts"
-        subtitle="Reserved for contact directory, segmentation, and account relationship views."
+        subtitle="Manage the CRM directory with search, filters, duplicate-aware records, and timeline references."
       />
-      <section className="page-card">
-        <h2>Contacts module</h2>
-        <p>Table, filters, and profile drawers can be added here later.</p>
-      </section>
+      <ContactList />
     </>
   );
 };
 
 export default ContactsPage;
-
