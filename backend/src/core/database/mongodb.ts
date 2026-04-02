@@ -1,10 +1,12 @@
 import { MongoClient, type Db } from "mongodb";
+import mongoose from "mongoose";
 
 import { env } from "../config/env.js";
 import { logger } from "../../utils/logger.js";
 
 let client: MongoClient | null = null;
 let database: Db | null = null;
+let mongooseConnected = false;
 
 export const connectToDatabase = async () => {
   if (database) {
@@ -14,6 +16,12 @@ export const connectToDatabase = async () => {
   client = new MongoClient(env.MONGODB_URI);
   await client.connect();
   database = client.db(env.MONGODB_DB_NAME);
+  if (!mongooseConnected) {
+    await mongoose.connect(env.MONGODB_URI, {
+      dbName: env.MONGODB_DB_NAME,
+    });
+    mongooseConnected = true;
+  }
 
   logger.info(`Connected to MongoDB database: ${env.MONGODB_DB_NAME}`);
 
@@ -27,4 +35,3 @@ export const getDatabase = () => {
 
   return database;
 };
-

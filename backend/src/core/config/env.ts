@@ -11,7 +11,10 @@ type Environment = {
   MONGODB_DB_NAME: string;
   CORS_ORIGIN: string;
   JWT_ACCESS_SECRET: string;
-  JWT_REFRESH_SECRET: string;
+  JWT_ACCESS_EXPIRES_IN: string;
+  JWT_ISSUER: string;
+  JWT_AUDIENCE: string;
+  BCRYPT_SALT_ROUNDS: number;
 };
 
 const getEnv = (key: string, fallback?: string) => {
@@ -33,6 +36,8 @@ export const env: Environment = {
   MONGODB_DB_NAME: getEnv("MONGODB_DB_NAME", "crm"),
   CORS_ORIGIN: getEnv("CORS_ORIGIN", "http://localhost:3000"),
   JWT_ACCESS_SECRET: getEnv("JWT_ACCESS_SECRET", "replace-with-access-secret"),
-  JWT_REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET", "replace-with-refresh-secret"),
+  JWT_ACCESS_EXPIRES_IN: getEnv("JWT_ACCESS_EXPIRES_IN", "15m"),
+  JWT_ISSUER: getEnv("JWT_ISSUER", "crm-backend"),
+  JWT_AUDIENCE: getEnv("JWT_AUDIENCE", "crm-users"),
+  BCRYPT_SALT_ROUNDS: Number(getEnv("BCRYPT_SALT_ROUNDS", "12")),
 };
-

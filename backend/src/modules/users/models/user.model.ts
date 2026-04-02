@@ -36,9 +36,9 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["owner", "admin", "manager", "sales_rep", "support"],
+      enum: ["admin", "manager", "sales"],
       required: true,
-      default: "sales_rep",
+      default: "sales",
     },
     permissions: {
       type: [String],
@@ -61,6 +61,10 @@ const userSchema = new Schema(
       type: Date,
     },
     managerId: objectId(),
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: objectId(),
     updatedBy: objectId(),
   },
@@ -73,4 +77,3 @@ userSchema.index({ workspaceId: 1, managerId: 1 });
 
 export type UserDocument = InferSchemaType<typeof userSchema>;
 export const UserModel = model("User", userSchema, "users");
-
