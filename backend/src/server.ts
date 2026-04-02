@@ -14,7 +14,9 @@ const bootstrap = async () => {
 };
 
 bootstrap().catch((error: unknown) => {
-  logger.error("Failed to bootstrap backend", error);
+  logger.error(
+    `Failed to bootstrap backend. Verify MongoDB is running and reachable at ${env.MONGODB_URI}. For local development, start MongoDB locally or run "docker compose up mongodb -d" if Docker is installed.`,
+    error,
+  );
   process.exit(1);
 });
-

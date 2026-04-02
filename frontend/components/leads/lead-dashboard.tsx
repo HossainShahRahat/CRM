@@ -264,6 +264,7 @@ export const LeadDashboard = () => {
             <p>Create leads, assign ownership, and seed the qualification pipeline.</p>
           </div>
           <input
+            name="search"
             className="lead-search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -272,12 +273,12 @@ export const LeadDashboard = () => {
         </div>
 
         <form className="lead-form" onSubmit={handleCreateLead}>
-          <input placeholder="First name" required value={newLead.firstName} onChange={(e) => setNewLead((c) => ({ ...c, firstName: e.target.value }))} />
-          <input placeholder="Last name" value={newLead.lastName} onChange={(e) => setNewLead((c) => ({ ...c, lastName: e.target.value }))} />
-          <input placeholder="Email" type="email" value={newLead.email} onChange={(e) => setNewLead((c) => ({ ...c, email: e.target.value }))} />
-          <input placeholder="Phone" value={newLead.phone} onChange={(e) => setNewLead((c) => ({ ...c, phone: e.target.value }))} />
-          <input placeholder="Company" value={newLead.companyName} onChange={(e) => setNewLead((c) => ({ ...c, companyName: e.target.value }))} />
-          <select value={newLead.source} onChange={(e) => setNewLead((c) => ({ ...c, source: e.target.value }))}>
+          <input name="firstName" placeholder="First name" required value={newLead.firstName} onChange={(e) => setNewLead((c) => ({ ...c, firstName: e.target.value }))} />
+          <input name="lastName" placeholder="Last name" value={newLead.lastName} onChange={(e) => setNewLead((c) => ({ ...c, lastName: e.target.value }))} />
+          <input name="email" placeholder="Email" type="email" value={newLead.email} onChange={(e) => setNewLead((c) => ({ ...c, email: e.target.value }))} />
+          <input name="phone" placeholder="Phone" value={newLead.phone} onChange={(e) => setNewLead((c) => ({ ...c, phone: e.target.value }))} />
+          <input name="companyName" placeholder="Company" value={newLead.companyName} onChange={(e) => setNewLead((c) => ({ ...c, companyName: e.target.value }))} />
+          <select name="source" value={newLead.source} onChange={(e) => setNewLead((c) => ({ ...c, source: e.target.value }))}>
             <option value="website">Website</option>
             <option value="referral">Referral</option>
             <option value="campaign">Campaign</option>
@@ -286,6 +287,7 @@ export const LeadDashboard = () => {
             <option value="partner">Partner</option>
           </select>
           <select
+            name="assignedUserId"
             value={newLead.assignedUserId}
             onChange={(e) => setNewLead((c) => ({ ...c, assignedUserId: e.target.value }))}
             required
@@ -297,10 +299,10 @@ export const LeadDashboard = () => {
               </option>
             ))}
           </select>
-          <input placeholder="Estimated value" type="number" min="0" value={newLead.estimatedValue} onChange={(e) => setNewLead((c) => ({ ...c, estimatedValue: e.target.value }))} />
-          <input placeholder="Interested in (comma separated)" value={newLead.interestedIn} onChange={(e) => setNewLead((c) => ({ ...c, interestedIn: e.target.value }))} />
-          <input placeholder="Campaign" value={newLead.campaign} onChange={(e) => setNewLead((c) => ({ ...c, campaign: e.target.value }))} />
-          <input placeholder="Tags (comma separated)" value={newLead.tags} onChange={(e) => setNewLead((c) => ({ ...c, tags: e.target.value }))} />
+          <input name="estimatedValue" placeholder="Estimated value" type="number" min="0" value={newLead.estimatedValue} onChange={(e) => setNewLead((c) => ({ ...c, estimatedValue: e.target.value }))} />
+          <input name="interestedIn" placeholder="Interested in (comma separated)" value={newLead.interestedIn} onChange={(e) => setNewLead((c) => ({ ...c, interestedIn: e.target.value }))} />
+          <input name="campaign" placeholder="Campaign" value={newLead.campaign} onChange={(e) => setNewLead((c) => ({ ...c, campaign: e.target.value }))} />
+          <input name="tags" placeholder="Tags (comma separated)" value={newLead.tags} onChange={(e) => setNewLead((c) => ({ ...c, tags: e.target.value }))} />
           <button type="submit" className="button">{isPending ? "Saving..." : "Create lead"}</button>
           <button type="button" className="button button--secondary" onClick={loadDashboard}>Refresh</button>
         </form>
@@ -344,6 +346,7 @@ export const LeadDashboard = () => {
             </div>
             <div className="lead-detail__actions">
               <select
+                name="leadAssignedUserId"
                 value={leadDetails.lead.assignedUserId}
                 onChange={(event) => handleAssign(leadDetails.lead.id, event.target.value)}
               >
@@ -354,6 +357,7 @@ export const LeadDashboard = () => {
                 ))}
               </select>
               <select
+                name="leadStatus"
                 value={leadDetails.lead.status}
                 onChange={(event) =>
                   handleStatusChange(
@@ -389,6 +393,7 @@ export const LeadDashboard = () => {
               <h3>Notes</h3>
               <form className="stack-form" onSubmit={submitNote}>
                 <textarea
+                  name="noteBody"
                   value={noteBody}
                   onChange={(event) => setNoteBody(event.target.value)}
                   placeholder="Add qualification notes or discovery insights"
@@ -408,23 +413,27 @@ export const LeadDashboard = () => {
               <h3>Follow-ups</h3>
               <form className="stack-form" onSubmit={submitFollowUp}>
                 <input
+                  name="followUpTitle"
                   placeholder="Follow-up title"
                   value={followUp.title}
                   onChange={(event) => setFollowUp((current) => ({ ...current, title: event.target.value }))}
                   required
                 />
                 <input
+                  name="followUpDescription"
                   placeholder="Description"
                   value={followUp.description}
                   onChange={(event) => setFollowUp((current) => ({ ...current, description: event.target.value }))}
                 />
                 <input
+                  name="followUpDueDate"
                   type="datetime-local"
                   value={followUp.dueDate}
                   onChange={(event) => setFollowUp((current) => ({ ...current, dueDate: event.target.value }))}
                   required
                 />
                 <select
+                  name="followUpPriority"
                   value={followUp.priority}
                   onChange={(event) => setFollowUp((current) => ({ ...current, priority: event.target.value }))}
                 >
@@ -434,6 +443,7 @@ export const LeadDashboard = () => {
                   <option value="urgent">Urgent</option>
                 </select>
                 <select
+                  name="followUpAssignedUserId"
                   value={followUp.assignedUserId}
                   onChange={(event) =>
                     setFollowUp((current) => ({ ...current, assignedUserId: event.target.value }))

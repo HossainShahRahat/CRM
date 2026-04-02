@@ -162,6 +162,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           First name
           <input
+            name="firstName"
             required
             value={form.firstName}
             onChange={(event) => updateField("firstName", event.target.value)}
@@ -170,6 +171,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           Last name
           <input
+            name="lastName"
             value={form.lastName}
             onChange={(event) => updateField("lastName", event.target.value)}
           />
@@ -177,6 +179,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           Email
           <input
+            name="email"
             required
             type="email"
             value={form.email}
@@ -186,6 +189,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           Phone
           <input
+            name="phone"
             required
             value={form.phone}
             onChange={(event) => updateField("phone", event.target.value)}
@@ -194,6 +198,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           Company
           <input
+            name="companyName"
             value={form.companyName}
             onChange={(event) => updateField("companyName", event.target.value)}
           />
@@ -201,6 +206,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label>
           Job title
           <input
+            name="companyTitle"
             value={form.companyTitle}
             onChange={(event) => updateField("companyTitle", event.target.value)}
           />
@@ -208,6 +214,7 @@ export const ContactForm = ({ mode, contactId }: ContactFormProps) => {
         <label className="contact-form__full">
           Tags
           <input
+            name="tags"
             value={form.tags}
             onChange={(event) => updateField("tags", event.target.value)}
             placeholder="enterprise, priority, renewals"

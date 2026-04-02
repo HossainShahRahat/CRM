@@ -132,7 +132,9 @@ export const AuthScreen = () => {
         {mode === "login" ? (
           <form className="auth-form" onSubmit={handleLogin}>
             <input
+              name="email"
               type="email"
+              autoComplete="username"
               placeholder="Email"
               value={loginForm.email}
               onChange={(event) =>
@@ -140,7 +142,9 @@ export const AuthScreen = () => {
               }
             />
             <input
+              name="password"
               type="password"
+              autoComplete="current-password"
               placeholder="Password"
               value={loginForm.password}
               onChange={(event) =>
@@ -148,6 +152,8 @@ export const AuthScreen = () => {
               }
             />
             <input
+              name="workspaceId"
+              autoComplete="off"
               placeholder="Workspace ID"
               value={loginForm.workspaceId}
               onChange={(event) =>
@@ -161,6 +167,8 @@ export const AuthScreen = () => {
         ) : (
           <form className="auth-form" onSubmit={handleRegister}>
             <input
+              name="firstName"
+              autoComplete="given-name"
               placeholder="First name"
               value={registerForm.firstName}
               onChange={(event) =>
@@ -168,6 +176,8 @@ export const AuthScreen = () => {
               }
             />
             <input
+              name="lastName"
+              autoComplete="family-name"
               placeholder="Last name"
               value={registerForm.lastName}
               onChange={(event) =>
@@ -175,7 +185,9 @@ export const AuthScreen = () => {
               }
             />
             <input
+              name="email"
               type="email"
+              autoComplete="email"
               placeholder="Email"
               value={registerForm.email}
               onChange={(event) =>
@@ -183,7 +195,9 @@ export const AuthScreen = () => {
               }
             />
             <input
+              name="password"
               type="password"
+              autoComplete="new-password"
               placeholder="Password"
               value={registerForm.password}
               onChange={(event) =>
@@ -191,6 +205,7 @@ export const AuthScreen = () => {
               }
             />
             <select
+              name="role"
               value={registerForm.role}
               onChange={(event) =>
                 setRegisterForm((current) => ({
@@ -214,4 +229,3 @@ export const AuthScreen = () => {
     </div>
   );
 };
-

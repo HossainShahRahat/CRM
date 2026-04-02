@@ -87,16 +87,19 @@ export const ContactList = () => {
       <div className="contacts-toolbar">
         <div className="contacts-filters">
           <input
+            name="search"
             value={filters.search}
             onChange={(event) => handleFilterChange("search", event.target.value)}
             placeholder="Search by name, email, phone"
           />
           <input
+            name="company"
             value={filters.company}
             onChange={(event) => handleFilterChange("company", event.target.value)}
             placeholder="Filter by company"
           />
           <input
+            name="tag"
             value={filters.tag}
             onChange={(event) => handleFilterChange("tag", event.target.value)}
             placeholder="Filter by tag"

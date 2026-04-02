@@ -27,6 +27,7 @@ export const Topbar = ({ title, subtitle }: TopbarProps) => {
         <p className="topbar__subtitle">{subtitle}</p>
       </div>
       <input
+        name="globalSearch"
         className="topbar__search"
         type="search"
         placeholder="Search customers, deals, or tasks"

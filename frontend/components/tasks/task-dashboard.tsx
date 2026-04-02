@@ -171,19 +171,20 @@ export const TaskDashboard = () => {
         </div>
 
         <form className="lead-form" onSubmit={handleCreateTask}>
-          <select value={form.taskType} onChange={(event) => setForm((current) => ({ ...current, taskType: event.target.value }))}>
+          <select name="taskType" value={form.taskType} onChange={(event) => setForm((current) => ({ ...current, taskType: event.target.value }))}>
             <option value="call">Call</option>
             <option value="meeting">Meeting</option>
             <option value="follow_up">Follow-up</option>
           </select>
-          <input placeholder="Task title" required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} />
-          <input placeholder="Description" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
-          <select value={form.assignedUserId} onChange={(event) => setForm((current) => ({ ...current, assignedUserId: event.target.value }))}>
+          <input name="title" placeholder="Task title" required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} />
+          <input name="description" placeholder="Description" value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
+          <select name="assignedUserId" value={form.assignedUserId} onChange={(event) => setForm((current) => ({ ...current, assignedUserId: event.target.value }))}>
             {users.map((user) => (
               <option key={user.id} value={user.id}>{user.displayName}</option>
             ))}
           </select>
           <select
+            name="entityType"
             value={form.entityType}
             onChange={(event) =>
               setForm((current) => ({
@@ -197,20 +198,20 @@ export const TaskDashboard = () => {
             <option value="lead">Lead</option>
             <option value="deal">Deal</option>
           </select>
-          <select value={form.entityId} onChange={(event) => setForm((current) => ({ ...current, entityId: event.target.value }))}>
+          <select name="entityId" value={form.entityId} onChange={(event) => setForm((current) => ({ ...current, entityId: event.target.value }))}>
             <option value="">Select linked record</option>
             {relatedOptions.map((option) => (
               <option key={option.id} value={option.id}>{option.label}</option>
             ))}
           </select>
-          <input type="datetime-local" required value={form.dueDate} onChange={(event) => setForm((current) => ({ ...current, dueDate: event.target.value }))} />
-          <select value={form.priority} onChange={(event) => setForm((current) => ({ ...current, priority: event.target.value }))}>
+          <input name="dueDate" type="datetime-local" required value={form.dueDate} onChange={(event) => setForm((current) => ({ ...current, dueDate: event.target.value }))} />
+          <select name="priority" value={form.priority} onChange={(event) => setForm((current) => ({ ...current, priority: event.target.value }))}>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
             <option value="urgent">Urgent</option>
           </select>
-          <input type="datetime-local" value={form.reminderAt} onChange={(event) => setForm((current) => ({ ...current, reminderAt: event.target.value }))} />
+          <input name="reminderAt" type="datetime-local" value={form.reminderAt} onChange={(event) => setForm((current) => ({ ...current, reminderAt: event.target.value }))} />
           <button type="submit" className="button">{isPending ? "Saving..." : "Create task"}</button>
         </form>
         {error ? <p className="status-message status-message--error">{error}</p> : null}

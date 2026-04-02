@@ -275,6 +275,7 @@ export const DealBoard = () => {
             <p>Create deals with value, stage, close date, and owner assignment.</p>
           </div>
           <select
+            name="pipeline"
             className="lead-search"
             value={pipeline}
             onChange={(event) => setPipeline(event.target.value)}
@@ -286,12 +287,14 @@ export const DealBoard = () => {
 
         <form className="lead-form" onSubmit={handleCreateDeal}>
           <input
+            name="name"
             placeholder="Deal name"
             required
             value={form.name}
             onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
           />
           <input
+            name="amount"
             placeholder="Deal value"
             type="number"
             min="0"
@@ -300,6 +303,7 @@ export const DealBoard = () => {
             onChange={(event) => setForm((current) => ({ ...current, amount: event.target.value }))}
           />
           <input
+            name="expectedCloseDate"
             type="date"
             required
             value={form.expectedCloseDate}
@@ -308,6 +312,7 @@ export const DealBoard = () => {
             }
           />
           <select
+            name="stage"
             value={form.stage}
             onChange={(event) =>
               setForm((current) => ({ ...current, stage: event.target.value as DealStage }))
@@ -320,6 +325,7 @@ export const DealBoard = () => {
             ))}
           </select>
           <select
+            name="ownerId"
             value={form.ownerId}
             onChange={(event) => setForm((current) => ({ ...current, ownerId: event.target.value }))}
             required

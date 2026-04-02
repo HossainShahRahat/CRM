@@ -119,6 +119,7 @@ export const SettingsDashboard = () => {
           {settings.customFields.map((field, index) => (
             <article key={`${field.entityType}-${field.key}-${index}`} className="settings-item">
               <input
+                name={`customFieldLabel-${index}`}
                 value={field.label}
                 onChange={(event) =>
                   setSettings((current) =>
@@ -134,6 +135,7 @@ export const SettingsDashboard = () => {
                 }
               />
               <select
+                name={`customFieldEntityType-${index}`}
                 value={field.entityType}
                 onChange={(event) =>
                   setSettings((current) =>
@@ -159,6 +161,7 @@ export const SettingsDashboard = () => {
                 <option value="task">Task</option>
               </select>
               <select
+                name={`customFieldType-${index}`}
                 value={field.fieldType}
                 onChange={(event) =>
                   setSettings((current) =>
@@ -202,6 +205,7 @@ export const SettingsDashboard = () => {
           {settings.pipelines.default.stages.map((stage, index) => (
             <article key={`${stage.key}-${index}`} className="settings-item">
               <input
+                name={`pipelineStageLabel-${index}`}
                 value={stage.label}
                 onChange={(event) =>
                   setSettings((current) =>
@@ -222,6 +226,7 @@ export const SettingsDashboard = () => {
                 }
               />
               <input
+                name={`pipelineStageProbability-${index}`}
                 type="number"
                 min="0"
                 max="100"
@@ -258,6 +263,7 @@ export const SettingsDashboard = () => {
             <article key={`${roleConfig.role}-${index}`} className="settings-item settings-item--wide">
               <strong>{roleConfig.role}</strong>
               <textarea
+                name={`rolePermissions-${index}`}
                 value={roleConfig.permissions.join(", ")}
                 onChange={(event) =>
                   setSettings((current) =>
@@ -298,4 +304,3 @@ export const SettingsDashboard = () => {
     </div>
   );
 };
-
