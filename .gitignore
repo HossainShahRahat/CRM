@@ -11,3 +11,4 @@ coverage/
 backend/.env
 frontend/.env.local
 *.log
+*.tsbuildinfo
