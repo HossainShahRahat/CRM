@@ -1,19 +1,16 @@
 import { Topbar } from "../../components/layout/topbar";
+import { SettingsDashboard } from "../../components/settings/settings-dashboard";
 
 const SettingsPage = () => {
   return (
     <>
       <Topbar
         title="Settings"
-        subtitle="Reserved for workspace configuration, permissions, and system preferences."
+        subtitle="Manage custom fields, pipeline stages, and workspace role permissions."
       />
-      <section className="page-card">
-        <h2>Settings module</h2>
-        <p>Workspace controls and configuration panels can live here later.</p>
-      </section>
+      <SettingsDashboard />
     </>
   );
 };
 
 export default SettingsPage;
-

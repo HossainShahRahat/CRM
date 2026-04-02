@@ -186,6 +186,47 @@ button {
   background: #f8fafc;
 }
 
+.settings-dashboard {
+  display: grid;
+  gap: 24px;
+}
+
+.settings-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.settings-item {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-alt);
+}
+
+.settings-item--wide {
+  grid-template-columns: 180px 1fr;
+  align-items: start;
+}
+
+.settings-item input,
+.settings-item select,
+.settings-item textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: white;
+}
+
+.settings-item textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
 .page-card {
   padding: 28px;
   border: 1px solid var(--border);
@@ -716,6 +757,11 @@ button {
 
   .dashboard-metrics,
   .dashboard-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-item,
+  .settings-item--wide {
     grid-template-columns: 1fr;
   }
 }

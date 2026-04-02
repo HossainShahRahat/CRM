@@ -7,6 +7,7 @@ import { dashboardRouter } from "../modules/dashboard/routes/dashboard.routes.js
 import { dealsRouter } from "../modules/deals/routes/deals.routes.js";
 import { leadsRouter } from "../modules/leads/routes/leads.routes.js";
 import { notificationsRouter } from "../modules/notifications/routes/notifications.routes.js";
+import { settingsRouter } from "../modules/settings/routes/settings.routes.js";
 import { tasksRouter } from "../modules/tasks/routes/tasks.routes.js";
 import { usersRouter } from "../modules/users/routes/users.routes.js";
 
@@ -19,5 +20,6 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/contacts", contactsRouter);
 apiRouter.use("/leads", leadsRouter);
 apiRouter.use("/notifications", notificationsRouter);
+apiRouter.use("/settings", settingsRouter);
 apiRouter.use("/deals", dealsRouter);
 apiRouter.use("/tasks", tasksRouter);
