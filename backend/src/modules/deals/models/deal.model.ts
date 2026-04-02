@@ -63,6 +63,11 @@ const dealSchema = new Schema(
     expectedCloseDate: {
       type: Date,
     },
+    pipelinePosition: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     closedAt: {
       type: Date,
     },
@@ -90,7 +95,7 @@ dealSchema.index({ workspaceId: 1, primaryContactId: 1 });
 dealSchema.index({ workspaceId: 1, contactIds: 1 });
 dealSchema.index({ workspaceId: 1, expectedCloseDate: 1, status: 1 });
 dealSchema.index({ workspaceId: 1, pipeline: 1, stage: 1 });
+dealSchema.index({ workspaceId: 1, pipeline: 1, stage: 1, pipelinePosition: 1 });
 
 export type DealDocument = InferSchemaType<typeof dealSchema>;
 export const DealModel = model("Deal", dealSchema, "deals");
-

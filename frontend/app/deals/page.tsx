@@ -1,19 +1,16 @@
 import { Topbar } from "../../components/layout/topbar";
+import { DealBoard } from "../../components/deals/deal-board";
 
 const DealsPage = () => {
   return (
     <>
       <Topbar
         title="Deals"
-        subtitle="Structured for pipeline stages, value tracking, and forecasting workflows."
+        subtitle="Manage pipeline flow with stage-based Kanban movement and immediate board updates."
       />
-      <section className="page-card">
-        <h2>Deals module</h2>
-        <p>Opportunity boards and forecast reports can be introduced here.</p>
-      </section>
+      <DealBoard />
     </>
   );
 };
 
 export default DealsPage;
-
