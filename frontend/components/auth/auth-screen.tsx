@@ -8,6 +8,14 @@ import { isValidEmail, requireFields } from "../../lib/validation";
 
 type AuthMode = "login" | "register";
 
+const isStrongPassword = (value: string) =>
+  value.length >= 8 &&
+  value.length <= 72 &&
+  /[A-Z]/.test(value) &&
+  /[a-z]/.test(value) &&
+  /[0-9]/.test(value) &&
+  /[^A-Za-z0-9]/.test(value);
+
 export const AuthScreen = () => {
   const { login, register } = useAuth();
   const [mode, setMode] = useState<AuthMode>("login");
@@ -71,8 +79,9 @@ export const AuthScreen = () => {
       },
       { valid: isValidEmail(registerForm.email), message: "Valid email is required." },
       {
-        valid: registerForm.password.length >= 8,
-        message: "Password must be at least 8 characters.",
+        valid: isStrongPassword(registerForm.password),
+        message:
+          "Password must be 8-72 characters and include uppercase, lowercase, number, and special character.",
       },
     ]);
 
